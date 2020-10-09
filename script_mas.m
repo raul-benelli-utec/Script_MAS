@@ -11,8 +11,8 @@ indices_ciclo=[];
 ciclo_1=[];
 
 %identifiacamos los indices de los vectores en los cuales 
-%se completa un ciclo de la oscilaci髇, iniciando en el primer
-%ciclo donde la funci髇 posici髇 crece
+%se completa un ciclo de la oscilaci贸n, iniciando en el primer
+%ciclo donde la funci贸n posici贸n crece
 
 for i= 2:length(pos)-1
   if n==1
@@ -52,40 +52,44 @@ periodos=[periodo_1,periodo_2,periodo_3,periodo_4];
 periodo=mean(periodos)
 t_inicio_grafica=t(indices_ciclo(1));
 
-%hallamos la frecuencia del sistema para la funci髇 ajustada
+%hallamos la frecuencia del sistema para la funci贸n ajustada
 frec=1/periodo
 
-%Hallamos el angulo de desfasaje para la funci髇 ajustada, evaluando la posicion en t=0
+%Hallamos el angulo de desfasaje para la funci贸n ajustada, evaluando la posicion en t=0
 %Y(0)=0.1 m
 fi=acos(0.1/amplitud)
 
-%Calculamos el valor de W para la funci髇 ajustada
+%Calculamos el valor de W para la funci贸n ajustada
 w=2*pi*frec
 
-%datos de la funcion ajustada, el angulo fi se resta dado que la funci髇
+%datos de la funcion ajustada, el angulo fi se resta dado que la funci贸n
 %se encuentra adelantada respecto de x=0
-%definimos un vector para graf韈ar la funci髇 ajstada
+%definimos un vector para graf铆car la funci贸n ajstada
 x=[0:0.01:6];
 
-%definimos la funci髇 que se ajusta a los datos experimentales, en base a referencias te髍icas
+%definimos la funci贸n que se ajusta a los datos experimentales, en base a referencias te贸ricas
 y=amplitud*cos(w*x-fi);
 
-%definimos la funci髇 para graficar la V(t), en base a referencias te髍icas 
+%definimos la funci贸n para graficar la V(t), en base a referencias te贸ricas 
 vel_t=-w*amplitud*sin(w*x-fi);
 
-%definimos la funci髇 para graficar la A(t), en base a referencias te髍icas 
+%definimos la funci贸n para graficar la A(t), en base a referencias te贸ricas 
 ac_t=-w^2*amplitud*cos(w*x-fi);
+fprintf('\n')
 
-%velocidad y aceleracion maximas
-V_max=w*amplitud
-A_max=w^2*amplitud
+%posicion, velocidad y aceleracion maximas seg煤n formulas
+P_max_formula=amplitud;
+V_max_formula=w*amplitud;
+A_max_formula=w^2*amplitud;
+
+
 
 %grafica datos experimentales
 hold on
 datos_exp=plot(t,pos,".");
 title('Sistema oscilador armonico simple')
 
-%grafica funci髇 ajustada
+%grafica funci贸n ajustada
 func=plot(x,y);
 
 %grafica velocidad en funcion del tiempo
@@ -98,7 +102,7 @@ plot(x,ac_t);
 %eje ox
 x_eje=[0 6];
 eje=plot(x_eje,0*x_eje);
-legend('Datos experimentales',' Funci髇 ajustada-> Y(t)','Vel(t)','A(t)')
+legend('Datos experimentales',' Funci贸n ajustada-> Y(t)','Vel(t)','A(t)')
 ylabel('Y(t)=A.cos(wt+fi),         V(t)=-w.A.sen(wt+fi),        A(t)-w^2.A.cos(w*x-fi)')
 xlabel('Tiempo en segundos')
 
@@ -107,4 +111,38 @@ xlabel('Tiempo en segundos')
 set(datos_exp,'color','blue','LineWidth',1)
 set(func,'color','red','LineWidth',1)
 set(eje,'color','black')
+
+
+%c谩lculo y comparaci贸n de los tiempos para los m谩ximos de las funciones
+%tiempo para velocidad, posici贸n y aceleraci贸n m谩ximas a partir de las funciones
+
+%el tiempo para la posicion maxima segun la funci贸n ser谩 cuando cos(w*t-fi)=1
+%despejando obtenemos que  t_pos_max= T+(fi/w)
+t_pos_max=(fi/w)+periodo;
+P_max_funcion=amplitud*cos(w*t_pos_max-fi);
+
+%el tiempo para la velocidad m谩xima seg煤n la funci贸n ser谩 cuando seno(w*t-fi)=-1
+%despejando obtenemos que t_vel_max= (3*pi/2*w)+(fi/w), sabiendo que T=(2*pi/w)
+%operando obtenemos que t_vel_max=(3/4*T)+(fi/w)
+t_vel_max=(0.75*periodo+fi/w);
+V_max_funcion=-w*amplitud*sin(w*t_vel_max-fi);
+
+%el tiempo para la aceleraci贸n m谩xima seg煤n la funcion sera cuando cos(w*x-fi)=-1
+%despejando obtenemos que t_ac_max=(pi/w)+(f/w), sabiendo que T=(2*pi/w)
+%operando obtenemos que t_ac_max=(1/2*T)+(fi/w)
+t_ac_max=(0.5*periodo+fi/w);
+A_max_funcion=-w^2*amplitud*cos(w*t_ac_max-fi);
+
+t_pos_max
+t_vel_max
+t_ac_max
+fprintf('\n')
+P_max_formula
+P_max_funcion
+fprintf('\n')
+V_max_formula=w*amplitud
+V_max_funcion
+fprintf('\n')
+A_max_formula=w^2*amplitud
+A_max_funcion
 
